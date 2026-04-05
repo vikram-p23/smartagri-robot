@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" data-bs-theme="light">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title or "SmartAgri Robot - Control Center" }}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-sA+4rj5En5Q5kZU6kaSNhWQ6x5dT1GpGzG3zUM1yCqA=" crossorigin="" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+
+<body>
+
+    <div id="app-container">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="header-brand">
+                        <div class="header-logo-icon">🤖</div>
+                        <div class="header-title">SmartAgri</div>
+                    </div>
+
+                    <nav class="top-nav" id="topNav">
+                        <div class="tab-buttons" id="tabButtons">
+                            <button class="tab-btn " title="Dashboard"
+                                onclick="window.location.href='{{ url_for('dashboard') }}'">
+                                <span>📊</span>
+                                <span class="tab-btn-label" data-lang-key="tabDashboard">Dashboard</span>
+                            </button>
+
+
+                            <button class="tab-btn" data-tabid="tasks"
+                                onclick="window.location.href='{{ url_for('tasks') }}'">
+                                <span>📋</span> <span class="tab-btn-label" data-lang-key="tabTasks">Tasks</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="team"
+                                onclick="window.location.href='{{ url_for('team') }}'">
+                                <span>💬</span> <span class="tab-btn-label" data-lang-key="tabTeam">Team Hub</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="bluetooth"
+                                onclick="window.location.href='{{ url_for('controls') }}'">
+
+                                <span>📶</span> <span class="tab-btn-label" data-lang-key="tabBluetooth">Wifi
+                                    Controls</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="sensors"
+                                onclick="window.location.href='{{ url_for('sensordata') }}'">
+                                <span>🌱</span>
+                                <span class="tab-btn-label" data-lang-key="tabSensors">Sensors</span>
+                            </button>
+
+
+
+
+
+                            <button class="tab-btn" data-tabid="camera"
+                                onclick="window.location.href='{{ url_for('camera_feed') }}'">
+
+                                <span>📹</span> <span class="tab-btn-label" data-lang-key="tabCamera">Live Feed</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="farming"
+                                onclick="window.location.href='{{ url_for('farming') }}'">
+                                <span>🚜</span> <span class="tab-btn-label" data-lang-key="tabFarming">Operations</span>
+                            </button>
+
+                            <button class="tab-btn" data-tabid="ai"
+                                onclick="window.location.href='{{ url_for('ai') }}'">
+                                <span>🧠</span> <span class="tab-btn-label" data-lang-key="tabAI">AI Assistant</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="weather"
+                                onclick="window.location.href='{{ url_for('weather') }}'">
+                                <span>🌤️</span> <span class="tab-btn-label" data-lang-key="tabWeather">Weather</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="analytics"
+                                onclick="window.location.href='{{ url_for('analytics') }}'">
+                                <span>📈</span> <span class="tab-btn-label"
+                                    data-lang-key="tabAnalytics">Analytics</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="inventory"
+                                onclick="window.location.href='{{ url_for('inventory') }}'">
+                                <span>📦</span> <span class="tab-btn-label"
+                                    data-lang-key="tabInventory">Inventory</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="maintenance"
+                                onclick="window.location.href='{{ url_for('maintenance') }}'">
+                                <span>🔧</span> <span class="tab-btn-label"
+                                    data-lang-key="tabMaintenance">Maintenance</span>
+                            </button>
+                            <button class="tab-btn" data-tabid="maintenance" onclick="window.location.href='{{ url_for('contact') }}'">
+                                <span>📞</span>
+                                <span class="tab-btn-label" data-lang-key="tabMaintenance">Contact</span>
+                            </button>
+
+
+                        </div>
+                        <div id="wave"></div>
+                    </nav>
+
+                    <div class="header-actions">
+
+                        <label class="toggle-switch" id="themeSwitcher" title="Toggle Light/Dark Mode">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="toggle-slider"></span>
+                            <i class="bi bi-moon" id="themeIcon" style="margin-left: 8px;"></i>
+                        </label>
+
+                        <div class="status-grid">
+                            <div class="status-card" title="Current Weather">
+                                <span class="status-value">
+                                    <span class="status-indicator online"></span>28°C
+                                </span>
+                                <span class="status-label" data-lang-key="statusWeather">🌡️ Weather</span>
+                            </div>
+                            <div class="status-card" title="Robot Battery Level">
+                                <span class="status-value" id="batteryLevel">
+                                    <span class="status-indicator online"></span>87%
+                                </span>
+                                <span class="status-label" data-lang-key="statusBattery">🔋 Battery</span>
+                            </div>
+                        </div>
+                        {% if session.get('email') %}
+
+                        <button id="logout-btn" class="btn btn-danger"
+                            onclick="window.location.href='{{ url_for('logout') }}'">
+                            Logout
+                        </button>
+                        {% else %}
+
+                        <button id="login-btn" class="btn btn-success"
+                            onclick="window.location.href='{{ url_for('login') }}'">
+                            Login
+                        </button>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+    
+    <footer>
+        <div class="footer text-center py-2">
+            &copy; {{ current_year }} SmartAgri Robot. All rights reserved.
+        </div>
+    </footer>
+        <div class="fab-container" id="fabContainer">
+            <div class="fab-menu">
+                {% if session.get('email') %}
+             
+                <div class="fab-menu-item" onclick="window.location.href='{{ url_for('profile') }}'">
+                    <span class="fab-label">Profile</span>
+                    <div class="fab-icon">👤</div>
+                </div>
+                
+               
+                <div class="fab-menu-item" onclick="window.location.href='{{ url_for('logout') }}'">
+                    <span class="fab-label">Logout</span>
+                    <div class="fab-icon">🚪</div>
+                </div>
+                {% else %}
+                
+                <div class="fab-menu-item" onclick="window.location.href='{{ url_for('login') }}'">
+                    <span class="fab-label">Login</span>
+                    <div class="fab-icon">🔑</div>
+                </div>
+                {% endif %}
+
+
+                <div class="fab-menu-item" onclick="window.location.href='{{ url_for('sensordata') }}'">
+                    <span class="fab-label">Sensors</span>
+                    <div class="fab-icon">🌱</div>
+                </div>
+                <div class="fab-menu-item" onclick="window.location.href='{{ url_for('controls') }}'">
+                    <span class="fab-label">Remote Control</span>
+                    <div class="fab-icon">🎮</div>
+                </div>
+            </div>
+            <button class="fab" id="fab">
+                +
+            </button>
+        </div>
+        </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="static/js/mode.js"> </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const fab = document.getElementById("fab");
+            const fabContainer = document.getElementById("fabContainer");
+
+            if (fab && fabContainer) {
+                fab.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    fabContainer.classList.toggle("active");
+                    fab.classList.toggle("active");
+                });
+
+               
+                document.addEventListener("click", function (e) {
+                    if (!fabContainer.contains(e.target)) {
+                        fabContainer.classList.remove("active");
+                        fab.classList.remove("active");
+                    }
+                });
+            }
+        });
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,417 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<div class="container mt-5">
+    <div id="tasks" class="tab-content active">
+        <div class="grid grid-2">
+            <!-- Left: Task Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon">➕</div>
+                        <span>Assign New Task</span>
+                    </h3>
+                </div>
+
+              
+                <div id="taskMap" class="map-container" style="height: 250px; margin-bottom: 1.5rem;">
+                    <div id="map-fallback" style="text-align:center; padding: 20px; color: #666; display:none;">
+                        <p>🗺️ Map loading...</p>
+                    </div>
+                </div>
+
+            <form id="task-form" style="
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 2rem;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                border: 1px solid rgba(255,255,255,0.2);
+                backdrop-filter: blur(10px);
+            ">
+                <input type="hidden" id="task-zone-data">
+            
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="task-type" class="form-label" style="
+                        display: block;
+                        margin-bottom: 0.5rem;
+                        color: white;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    ">📋 Task Type</label>
+                    <select id="task-type" style="
+                        width: 100%;
+                        padding: 12px 16px;
+                        border: 2px solid rgba(255,255,255,0.3);
+                        border-radius: 12px;
+                        background: rgba(255,255,255,0.1);
+                        color: white;
+                        font-size: 14px;
+                        backdrop-filter: blur(10px);
+                        transition: all 0.3s ease;
+                        outline: none;
+                        appearance: none;
+                        background-image: url('data:image/svg+xml;utf8,<svg fill=\" white\" height=\"24\" viewBox=\"0 0 24 24\"
+                        width=\"24\" xmlns=\"http://www.w3.org/2000/svg\">
+                        <path d=\"M7 10l5 5 5-5z\" /></svg>');
+                        background-repeat: no-repeat;
+                        background-position: right 12px center;
+                        ">
+                        <option style="color: #333;">💧 Watering</option>
+                        <option style="color: #333;">🌱 Seeding</option>
+                        <option style="color: #333;">🚜 Ploughing</option>
+                        <option style="color: #333;">👮 Petrol</option>
+                        <option style="color: #333;">📡 Scan Field</option>
+                    </select>
+                </div>
+            
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="task-priority" class="form-label" style="
+                        display: block;
+                        margin-bottom: 0.5rem;
+                        color: white;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    ">🎯 Priority Level</label>
+                    <select id="task-priority" style="
+                        width: 100%;
+                        padding: 12px 16px;
+                        border: 2px solid rgba(255,255,255,0.3);
+                        border-radius: 12px;
+                        background: rgba(255,255,255,0.1);
+                        color: white;
+                        font-size: 14px;
+                        backdrop-filter: blur(10px);
+                        transition: all 0.3s ease;
+                        outline: none;
+                        appearance: none;
+                        background-image: url('data:image/svg+xml;utf8,<svg fill=\" white\" height=\"24\" viewBox=\"0 0 24 24\"width=\"24\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M7 10l5 5 5-5z\" /></svg>');
+                        background-repeat: no-repeat;
+                        background-position: right 12px center;
+                        ">
+                        <option value="low" style="color: #4CAF50;">🟢 Low</option>
+                        <option value="normal" selected style="color: #2196F3;">🔵 Normal</option>
+                        <option value="high" style="color: #FF9800;">🟠 High</option>
+                        <option value="urgent" style="color: #F44336;">🔴 Urgent</option>
+                    </select>
+                </div>
+            
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label for="task-details" class="form-label" style="
+                        display: block;
+                        margin-bottom: 0.5rem;
+                        color: white;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    ">📝 Task Details</label>
+                    <input type="text" id="task-details" placeholder="e.g., North-West corner, Field A-12, Irrigation needed..."
+                        style="
+                        width: 100%;
+                        padding: 12px 16px;
+                        border: 2px solid rgba(255,255,255,0.3);
+                        border-radius: 12px;
+                        background: rgba(255,255,255,0.1);
+                        color: white;
+                        font-size: 14px;
+                        backdrop-filter: blur(10px);
+                        transition: all 0.3s ease;
+                        outline: none;
+                    " onfocus="this.style.borderColor='rgba(255,255,255,0.6)'; this.style.background='rgba(255,255,255,0.15)';"
+                        onblur="this.style.borderColor='rgba(255,255,255,0.3)'; this.style.background='rgba(255,255,255,0.1)';">
+                    <small style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-top: 0.5rem; display: block;">
+                        💡 Provide specific location or instructions
+                    </small>
+                </div>
+            
+                <button type="submit" style="
+                    width: 100%;
+                    padding: 14px 20px;
+                    background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(255,107,107,0.3);
+                    position: relative;
+                    overflow: hidden;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(255,107,107,0.4)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255,107,107,0.3)';">
+                    🚀 Assign Task
+                </button>
+            </form>
+            </div>
+
+
+          
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon">📜</div>
+                        <span>Task Log</span>
+                    </h3>
+                    <button class="btn btn-primary" style="padding: 0.5rem 1rem;" onclick="clearTasks()">Clear
+                        All</button>
+                </div>
+                <div id="task-log"></div>
+            </div>
+        
+
+        
+        <div class="card ">
+            <div class="card-header" id="calendar-header"
+                style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                <button id="prev-month-btn" class="btn btn-primary" style="padding: 0.5rem 1rem;">&lt;</button>
+                <h3 id="month-year-display" class="card-title" style="margin: 0 auto;">Loading...</h3>
+                <button id="next-month-btn" class="btn btn-primary" style="padding: 0.5rem 1rem;">&gt;</button>
+            </div>
+            <div id="calendar-grid" class="task-scheduler"
+                style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;"></div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="toast" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #323232;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+"></div>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script>
+    let taskLog = JSON.parse(localStorage.getItem('taskLog')) || [];
+    let currentUserRole = { name: "Admin" };
+    let currentDate = new Date();
+
+   
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.opacity = 1;
+        setTimeout(() => toast.style.opacity = 0, 2000);
+    }
+
+
+    function saveTasks() {
+        localStorage.setItem('taskLog', JSON.stringify(taskLog));
+    }
+
+    function logTask(description, details, priority = 'normal') {
+        const now = new Date();
+        taskLog.unshift({
+            user: currentUserRole.name,
+            description,
+            details,
+            priority,
+            timestamp: now.toLocaleTimeString()
+        });
+
+        const priorityOrder = { urgent: 4, high: 3, normal: 2, low: 1 };
+        taskLog.sort((a, b) => (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0));
+        saveTasks();
+        updateTaskLog();
+    }
+
+    function updateTaskLog() {
+        const logContainer = document.getElementById('task-log');
+        if (!logContainer) return;
+
+        if (taskLog.length === 0) {
+            logContainer.innerHTML = `<div class="alert alert-info">No tasks yet.</div>`;
+            return;
+        }
+
+        logContainer.innerHTML = taskLog.map(entry => `
+            <div class="alert alert-green" style="margin-bottom:10px; padding:10px; border-radius:8px;">
+                <span>👤</span>
+                <div>
+                    <strong>${entry.description}</strong> by ${entry.user}<br>
+                    <small>${entry.details} at ${entry.timestamp} (Priority: ${entry.priority})</small>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function clearTasks() {
+        if (confirm('Clear all tasks?')) {
+            taskLog = [];
+            saveTasks();
+            updateTaskLog();
+        }
+    }
+
+   
+    function initMap() {
+        const mapContainer = document.getElementById('taskMap');
+        const fallback = document.getElementById('map-fallback');
+
+       
+        fallback.style.display = 'block';
+
+       
+        if (typeof L === 'undefined') {
+            console.error("Leaflet library not loaded");
+            fallback.innerHTML = '<p>🗺️ Map could not be loaded</p><p><small>Please check your internet connection</small></p>';
+            return;
+        }
+
+        try {
+          
+            const map = L.map('taskMap').setView([12.9716, 77.5946], 13);
+
+           
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+          
+            L.marker([12.9716, 77.5946])
+                .addTo(map)
+                .bindPopup('📍 Task Zone - Bangalore')
+                .openPopup();
+
+           
+            fallback.style.display = 'none';
+
+        } catch (error) {
+            console.error("Error initializing map:", error);
+            fallback.innerHTML = '<p>🗺️ Error loading map</p><p><small>' + error.message + '</small></p>';
+        }
+    }
+
+ 
+    function renderCalendar(year, month) {
+        const calendarGrid = document.getElementById('calendar-grid');
+        const monthYearDisplay = document.getElementById('month-year-display');
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+
+        monthYearDisplay.textContent = firstDay.toLocaleString('default', { month: 'long', year: 'numeric' });
+        calendarGrid.innerHTML = '';
+
+        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+            const head = document.createElement('div');
+            head.textContent = day;
+            head.style.fontWeight = 'bold';
+            head.style.textAlign = 'center';
+            calendarGrid.appendChild(head);
+        });
+
+        for (let i = 0; i < firstDay.getDay(); i++) {
+            calendarGrid.appendChild(document.createElement('div'));
+        }
+
+        const today = new Date();
+        for (let d = 1; d <= lastDay.getDate(); d++) {
+            const cell = document.createElement('div');
+            cell.className = 'calendar-day';
+            cell.style.padding = '10px';
+            cell.style.border = '1px solid #ccc';
+            cell.style.borderRadius = '6px';
+            cell.style.textAlign = 'center';
+            cell.style.cursor = 'pointer';
+            cell.innerHTML = `<div class="day-number">${d}</div>`;
+
+            if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) {
+                cell.style.background = '#e0f7fa';
+                cell.style.fontWeight = 'bold';
+            }
+
+            cell.addEventListener('click', () => {
+                showToast(`ℹ️ Viewing tasks for ${d}/${month + 1}/${year}`);
+            });
+
+            calendarGrid.appendChild(cell);
+        }
+    }
+
+    
+    function setupCalendarNavigation() {
+        const prevBtn = document.getElementById('prev-month-btn');
+        const nextBtn = document.getElementById('next-month-btn');
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+            });
+        }
+    }
+
+
+    function setupFormSubmission() {
+        const form = document.getElementById('task-form');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const type = document.getElementById('task-type').value;
+                const priority = document.getElementById('task-priority').value;
+                const details = document.getElementById('task-details').value || 'No details';
+                logTask(type, details, priority);
+                e.target.reset();
+                showToast('✅ Task added successfully!');
+            });
+        }
+    }
+
+   
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTaskLog();
+        renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        setupCalendarNavigation();
+        setupFormSubmission();
+
+        
+        setTimeout(initMap, 100);
+    });
+
+    
+    window.addEventListener('load', () => {
+     
+        if (!document.querySelector('#taskMap .leaflet-container')) {
+            setTimeout(initMap, 500);
+        }
+    });
+
+    function updateTask(actionName) {
+            fetch('/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: actionName })
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url; 
+                    }
+                })
+                .catch(err => console.error("Error:", err));
+        }
+</script>
+{% endblock %}

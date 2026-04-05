@@ -1,0 +1,493 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="weather" class="tab-content active mt-5">
+    <div class="grid grid-2">
+
+        <!-- 🌤️ CURRENT WEATHER -->
+        <div class="weather-widget text-center premium-card animate-fade-in">
+            <div class="premium-header">
+                <h3 class="premium-title">🌤️ Current Weather (Bangalore)</h3>
+                <p class="premium-subtitle">{{ today }}</p>
+            </div>
+
+            <div class="weather-icon-container">
+                <div class="weather-icon animate-float">☀️</div>
+            </div>
+
+            <div class="temperature-display">
+                <div class="current-temp animate-scale-in" id="currentTemp">{{ current_temp }}°C</div>
+                <div class="weather-condition animate-fade-in-delay">{{ sky }}</div>
+            </div>
+
+            <div class="weather-details-grid">
+                <div class="weather-detail-card animate-slide-in-left">
+                    <div class="detail-icon">💨</div>
+                    <div class="detail-info">
+                        <div class="detail-label">Wind</div>
+                        <div class="detail-value" id="windSpeed">{{ wind }} km/h</div>
+                    </div>
+                </div>
+                <div class="weather-detail-card animate-slide-in-left" style="animation-delay: 0.1s">
+                    <div class="detail-icon">💧</div>
+                    <div class="detail-info">
+                        <div class="detail-label">Humidity</div>
+                        <div class="detail-value" id="weatherHumidity">{{ humidity }}%</div>
+                    </div>
+                </div>
+                <div class="weather-detail-card animate-slide-in-right" style="animation-delay: 0.2s">
+                    <div class="detail-icon">🌡️</div>
+                    <div class="detail-info">
+                        <div class="detail-label">Feels Like</div>
+                        <div class="detail-value" id="feelsLikeTemp">{{ current_temp }}°</div>
+                    </div>
+                </div>
+                <div class="weather-detail-card animate-slide-in-right" style="animation-delay: 0.3s">
+                    <div class="detail-icon">☀️</div>
+                    <div class="detail-info">
+                        <div class="detail-label">Condition</div>
+                        <div class="detail-value" id="uvIndex">{{ sky }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🌧️ MONSOON WATCH -->
+        <div class="premium-card animate-fade-in" style="animation-delay: 0.2s">
+            <div class="premium-header">
+                <h3 class="premium-title">
+                    <span class="card-icon">🌧️</span>
+                    Monsoon Watch
+                </h3>
+            </div>
+            <div id="monsoonWatch" class="premium-content">
+                <div class="rain-chart">
+                    <div class="rain-bar-container">
+                        <div class="rain-bar animate-grow-height" style="height: 20%"></div>
+                    </div>
+                    <div class="rain-label">Today</div>
+                </div>
+                <div class="rain-chart">
+                    <div class="rain-bar-container">
+                        <div class="rain-bar animate-grow-height" style="height: 45%; animation-delay: 0.3s"></div>
+                    </div>
+                    <div class="rain-label">Tomorrow</div>
+                </div>
+                <div class="rain-chart">
+                    <div class="rain-bar-container">
+                        <div class="rain-bar animate-grow-height" style="height: 30%; animation-delay: 0.5s"></div>
+                    </div>
+                    <div class="rain-label">Day 3</div>
+                </div>
+                <div class="monsoon-summary">
+                    <p>Rain chance: <strong class="highlight">Low</strong> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6-DAY FORECAST -->
+    <div class="premium-card mt-4 animate-fade-in" style="animation-delay: 0.4s">
+        <div class="premium-header">
+            <h3 class="premium-title">
+                <span class="card-icon">🕒</span>
+                6-Day Forecast
+            </h3>
+        </div>
+        <div id="hourly-forecast" class="forecast-container">
+            {% if hourly_forecasts %}
+            {% for f in hourly_forecasts %}
+            <div class="forecast-item animate-slide-in-up" style="animation-delay: {{ loop.index * 0.1 }}s">
+                <div class="forecast-day">{{ f.date }}</div>
+                <div class="forecast-icon">☀️</div>
+                <div class="forecast-details">
+                    <div class="forecast-condition">{{ f.sky }}</div>
+                    <div class="forecast-temp">{{ f.temp }}°C</div>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="no-data-message">
+                <p>No forecast data available</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Premium UI Styling */
+    :root {
+        --primary: #4361ee;
+        --primary-light: #4895ef;
+        --secondary: #3f37c9;
+        --accent: #4cc9f0;
+        --dark: #1e1e2e;
+        --light: #f8f9fa;
+        --success: #4ade80;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --card-bg: rgba(255, 255, 255, 0.9);
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --border-radius: 16px;
+        --transition: all 0.3s ease;
+    }
+
+    body {
+        
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--dark);
+    }
+
+    .premium-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        transition: var(--transition);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .premium-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .premium-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        background: linear-gradient(to right, var(--primary), var(--primary-light));
+        color: white;
+    }
+
+    .premium-title {
+        margin: 0;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .premium-subtitle {
+        margin: 0.5rem 0 0 0;
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+
+    .premium-content {
+        padding: 1.5rem;
+    }
+
+    .weather-widget {
+        padding: 0;
+    }
+
+    .weather-icon-container {
+        padding: 1rem 0;
+    }
+
+    .weather-icon {
+        font-size: 5rem;
+        margin: 0 auto;
+    }
+
+    .temperature-display {
+        padding: 1rem 0;
+    }
+
+    .current-temp {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .weather-condition {
+        font-size: 1.2rem;
+        color: var(--dark);
+        opacity: 0.8;
+    }
+
+    .weather-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+
+    .weather-detail-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 12px;
+        transition: var(--transition);
+    }
+
+    .weather-detail-card:hover {
+        background: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .detail-icon {
+        font-size: 1.5rem;
+    }
+
+    .detail-info {
+        flex: 1;
+    }
+
+    .detail-label {
+        font-size: 0.85rem;
+        color: rgba(0, 0, 0, 0.6);
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--dark);
+    }
+
+    /* Monsoon Watch */
+    .rain-charts {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 1.5rem;
+    }
+
+    .rain-chart {
+        text-align: center;
+        flex: 1;
+        max-width: 80px;
+    }
+
+    .rain-bar-container {
+        height: 120px;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+    }
+
+    .rain-bar {
+        width: 100%;
+        background: linear-gradient(to top, var(--primary), var(--accent));
+        border-radius: 10px;
+    }
+
+    .rain-label {
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .monsoon-summary {
+        text-align: center;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .highlight {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    /* Forecast */
+    .forecast-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .forecast-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 12px;
+        transition: var(--transition);
+    }
+
+    .forecast-item:hover {
+        background: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .forecast-day {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .forecast-icon {
+        font-size: 2rem;
+        margin: 0.5rem 0;
+    }
+
+    .forecast-details {
+        text-align: center;
+    }
+
+    .forecast-condition {
+        font-size: 0.85rem;
+        color: rgba(0, 0, 0, 0.6);
+        margin-bottom: 0.25rem;
+    }
+
+    .forecast-temp {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .no-data-message {
+        text-align: center;
+        padding: 2rem;
+        color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes float {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes growHeight {
+        from {
+            height: 0;
+        }
+
+        to {
+            height: 100%;
+        }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.8s ease forwards;
+    }
+
+    .animate-fade-in-delay {
+        animation: fadeIn 0.8s ease 0.5s forwards;
+        opacity: 0;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.6s ease forwards;
+    }
+
+    .animate-slide-in-left {
+        animation: slideInLeft 0.6s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-slide-in-right {
+        animation: slideInRight 0.6s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-slide-in-up {
+        animation: slideInUp 0.6s ease forwards;
+        opacity: 0;
+    }
+
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .animate-grow-height {
+        animation: growHeight 1s ease-out forwards;
+        transform-origin: bottom;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .grid-2 {
+            grid-template-columns: 1fr;
+        }
+
+        .weather-details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .forecast-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .current-temp {
+            font-size: 2.5rem;
+        }
+    }
+</style>
+
+{% endblock %}

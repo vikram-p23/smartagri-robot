@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div id="wifiScanContainer" class="wifi-scan-panel text-center mt-5">
+    <div class="wifi-scan-title">
+        <i class="bi bi-wifi"></i>
+        <span>Scanning for nearby devices...</span>
+
+        <div class="bluetooth-scan-container">
+            <button class="scan-button" onclick="scanForDevices()">
+                <span data-lang-key="btnScan">Scan</span>
+                <div class="pulse-ring"></div>
+            </button>
+        </div>
+    </div>
+    <p class="wifi-small">Please wait while we detect your ESP32 modules.</p>
+    <div id="wifiDeviceList"></div>
+</div>
+
+
+<div id="control" class="tab-content mt-5" style="display: none;">
+    <div class="grid grid-2">
+        <div class="controller-container" id="controllerContainer">
+            <div class="controller-status-area mb-3">
+                <div class="controller-status">
+                    <div class="controller-status-indicator" id="controllerStatusIndicator"></div>
+                    <span id="controllerStatusText">Disconnected</span>
+                </div>
+            </div>
+
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm"
+                role="alert" style="width: fit-content;">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <div>{{ message }}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+
+            <form action="{{ url_for('controls') }}" method="POST" id="controlForm">
+                <div class="d-pad text-center">
+                    <button class="d-pad-btn" name="value" value="1" type="submit">↑</button>
+                    <div class="d-flex justify-content-center align-items-center mt-2 mb-2">
+                        <button class="d-pad-btn me-3" name="value" value="3" type="submit">←</button>
+                        <button class="d-pad-btn bg-dark text-white" name="value" value="0" type="submit">⏻</button>
+                        <button class="d-pad-btn ms-3" name="value" value="4" type="submit">→</button>
+                    </div>
+                    <button class="d-pad-btn" name="value" value="2" type="submit">↓</button>
+                </div>
+           
+
+            <div class="emergency-stop-area mt-4">
+                <button class="emergency-stop-btn-new" name="value" value="0" id="emergencyStopBtnNew">🛑<br>EMERGENCY<br>STOP</button>
+            </div>
+            </form>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="tool-control-panel">
+                <div class="tool-control-header">
+                    <h4 class="tool-control-title">🚜 Ploughing Remote</h4>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="ploughToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="tool-control-body">
+                    <div class="tool-control-row">
+                        <span class="tool-control-label">Depth Control</span>
+                        <div class="tool-control-actions">
+                            <button class="btn btn-primary tool-btn" id="ploughDepthDown">-</button>
+                            <button class="btn btn-primary tool-btn" id="ploughDepthUp">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-control-panel">
+                <div class="tool-control-header">
+                    <h4 class="tool-control-title">🌱 Seeding Remote</h4>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="seedToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="tool-control-body">
+                    <div class="tool-control-row">
+                        <span class="tool-control-label">Density Control</span>
+                        <div class="select-group">
+                            <select id="seedDensity">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Med</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tool-control-panel">
+                <div class="tool-control-header">
+                    <h4 class="tool-control-title">💧 Watering Remote</h4>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="waterToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="tool-control-body">
+                    <div class="tool-control-row">
+                        <label for="waterFlowRate" class="tool-control-label">Flow Rate</label>
+                        <input type="range" id="waterFlowRate" class="slider" min="1" max="5" value="3"
+                            style="flex-grow: 1;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="output-area">
+                <div class="area-title">📊 Real-Time Data</div>
+                <div class="output-data">
+                    <p>Direction: <span id="directionOutput">Left</span></p>
+                    <p>Power: <span id="powerOutput">0%</span></p>
+                    <p>Angle: <span id="angleOutput">0°</span></p>
+                    <p>Plough: <span id="ploughStatusOutput">DISENGAGED</span></p>
+                    <p>Seeder: <span id="seederStatusOutput">OFF</span></p>
+                    <p>Watering: <span id="wateringStatusOutput">OFF</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .d-pad {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .d-pad-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        font-size: 24px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        margin: 6px;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+    }
+
+    .d-pad-btn:hover {
+        transform: scale(1.1);
+        background-color: #0056b3;
+    }
+
+    #d-pad-center {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+    }
+
+    .wifi-scan-panel {
+        border: 1px dashed #ccc;
+        padding: 16px;
+        border-radius: 12px;
+      
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    .wifi-scan-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .wifi-device {
+        padding: 10px;
+       
+        margin: 8px 0;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .wifi-device.connecting {
+        background: #fff3cd;
+    }
+
+    .wifi-device.connected {
+        background: #d4edda;
+    }
+</style>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const wifiContainer = document.getElementById("wifiScanContainer");
+        const controlContainer = document.getElementById("control");
+        const wifiList = document.getElementById("wifiDeviceList");
+        const statusText = document.getElementById("controllerStatusText");
+        const statusIndicator = document.getElementById("controllerStatusIndicator");
+
+        const connectedBefore = localStorage.getItem("esp32_connected");
+
+        if (connectedBefore === "true") {
+            wifiContainer.style.display = "none";
+            controlContainer.style.display = "block";
+            statusIndicator.style.background = "#28a745";
+            statusText.innerText = "Connected: ESP32-1";
+            startDummyData();
+            return;
+        }
+
+        // Show fake device list during scanning
+        const devices = ["ESP32-1", "Aislyn Tech", "Realme", "Vijayanagar Hospital"];
+        wifiList.innerHTML = devices.map(d => `
+            <div class="wifi-device">
+                <span>📶 ${d}</span>
+                <span class="text-muted small">Scanning...</span>
+            </div>
+        `).join("");
+
+       
+        setTimeout(() => {
+            const first = wifiList.querySelector(".wifi-device");
+            first.classList.add("connecting");
+            first.querySelector(".text-muted").innerText = "Connecting...";
+        }, 10000);
+
+        
+        setTimeout(() => {
+            const first = wifiList.querySelector(".wifi-device");
+            first.classList.remove("connecting");
+            first.classList.add("connected");
+            first.querySelector(".text-muted").innerText = "Connected";
+
+            statusIndicator.style.background = "#28a745";
+            statusText.innerText = "Connected: ESP32-Field-1";
+
+            localStorage.setItem("esp32_connected", "true");
+
+            setTimeout(() => {
+                wifiContainer.style.display = "none";
+                controlContainer.style.display = "block";
+                startDummyData();
+            }, 3000);
+        }, 15000);
+
+       
+        function startDummyData() {
+            const dirs = ["STOP", "FRONT", "BACK", "LEFT", "RIGHT"];
+            setInterval(() => {
+                document.getElementById("directionOutput").innerText = dirs[Math.floor(Math.random() * dirs.length)];
+                document.getElementById("powerOutput").innerText = Math.floor(Math.random() * 100) + "%";
+                document.getElementById("angleOutput").innerText = Math.floor(Math.random() * 180) + "°";
+                document.getElementById("ploughStatusOutput").innerText = Math.random() > 0.5 ? "ENGAGED" : "DISENGAGED";
+                document.getElementById("seederStatusOutput").innerText = Math.random() > 0.5 ? "ON" : "OFF";
+                document.getElementById("wateringStatusOutput").innerText = Math.random() > 0.5 ? "ON" : "OFF";
+            }, 2000);
+        }
+    });
+</script>
+
+{% endblock %}

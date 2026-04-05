@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div id="dashboard" class="tab-content active">
+        <div class="sensor-grid">
+            <div class="sensor-card  mb-2 ">
+                <span class="sensor-icon">🌿</span>
+                <span class="sensor-value" id="plantsCount">1,247</span>
+                <span class="sensor-label" data-lang-key="statPlants">Plants Monitored</span>
+            </div>
+            <div class="sensor-card  mb-2">
+                <span class="sensor-icon">💧</span>
+                <span class="sensor-value" id="waterUsage">890L</span>
+                <span class="sensor-label" data-lang-key="statWater">Water Used Today</span>
+            </div>
+            <div class="sensor-card  mb-2">
+                <span class="sensor-icon">🌾</span>
+                <span class="sensor-value" id="areasCovered">24.5</span>
+                <span class="sensor-label" data-lang-key="statAcres">Acres Covered</span>
+            </div>
+            <div class="sensor-card  mb-2">
+                <span class="sensor-icon">✅</span>
+                <span class="sensor-value" id="healthScore">94%</span>
+                <span class="sensor-label" data-lang-key="statHealth">Crop Health</span>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon">🧠</div>
+                        <span data-lang-key="titleAIAlerts">AI Alerts & Recommendations</span>
+                    </h3>
+                </div>
+                <div id="aiAlerts">
+                </div>
+            </div>
+
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon">🐞</div>
+                        <span data-lang-key="titlePestForecast">Pest & Disease Forecast</span>
+                    </h3>
+                </div>
+                <div id="pestForecast">
+                </div>
+            </div>
+
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon">📈</div>
+                        <span data-lang-key="titleMandiPrices">Mandi Prices (Yeshwanthpur, Bengaluru)</span>
+                    </h3>
+                </div>
+                <div id="mandiPrices">
+                </div>
+            </div>
+
+            <div class="card mb-2">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <div class="card-icon">🤖</div>
+                        <span data-lang-key="titleRobotStatus">Robot Status</span>
+                    </h3>
+                </div>
+                <div class="grid grid-2">
+                    <div>
+                        <div class="control-label" data-lang-key="statusBatteryLevel">Battery Level</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="batteryBar" style="width: 87%"></div>
+                        </div>
+                        <small id="batteryStatusText">87% - 4.2 hours remaining</small>
+                    </div>
+                    <div>
+                        <div class="control-label" data-lang-key="statusWaterTank">Water Tank</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="waterTankBar" style="width: 65%"></div>
+                        </div>
+                        <small id="waterTankStatus">65% - 12.3L remaining</small>
+                    </div>
+                    <div>
+                        <div class="control-label" data-lang-key="statusSeedHopper">Seed Hopper</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="seedHopperBar" style="width: 42%"></div>
+                        </div>
+                        <small id="seedHopperStatus">42% - Refill soon</small>
+                    </div>
+                    <div>
+                        <div class="control-label" data-lang-key="statusSystemHealth">System Health</div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 98%"></div>
+                        </div>
+                        <small>98% - All systems operational</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    const inventory = { seeds: 42, water: 65 };
+
+    function updateDashboard() {
+        
+
+        Object.keys(inventory).forEach(key => {
+            const barId = key === 'seeds' ? 'seedHopperBar' : (key === 'water' ? 'waterTankBar' : null);
+            if (barId) document.getElementById(barId).style.width = `${inventory[key]}%`;
+        });
+
+        updateAIAlerts();
+        updatePestPrediction();
+        updateIndianAppContext();
+    }
+
+    function updateAIAlerts() {
+        const aiAlertsContainer = document.getElementById('aiAlerts');
+        if (aiAlertsContainer) {
+            aiAlertsContainer.innerHTML = `
+            <div class="alert alert-success">
+                <span>✅</span>
+                <div>
+                    <strong>All Systems Optimal</strong><br>
+                    AI analysis indicates no immediate actions are required.
+                </div>
+            </div>`;
+        }
+    }
+
+    function updatePestPrediction() {
+        const pestContainer = document.getElementById('pestForecast');
+        if (pestContainer) {
+            const paddyRisk = (30 + Math.random() * 20).toFixed(0);
+            const cottonRisk = (50 + Math.random() * 25).toFixed(0);
+            pestContainer.innerHTML = `
+            <div class="alert alert-success">
+                <span>🌾</span>
+                <div><strong>Paddy Brown Spot Risk:</strong> ${paddyRisk}%<br>
+                High humidity increases risk. Monitor leaf conditions.</div>
+            </div>
+            <div class="alert alert-warning">
+                <span>🐞</span>
+                <div><strong>Cotton Aphid Risk:</strong> ${cottonRisk}%<br>
+                Moderate temperatures are favorable. Check underside of leaves.</div>
+            </div>`;
+        }
+    }
+
+    function updateIndianAppContext() {
+        const mandiContainer = document.getElementById('mandiPrices');
+        if (mandiContainer) {
+            const tomatoPrice = 25 + (Math.random() - 0.5) * 4;
+            const onionPrice = 18 + (Math.random() - 0.5) * 3;
+            mandiContainer.innerHTML = `
+            <div class="alert alert-info"><span>🍅</span><div><strong>Tomato:</strong> ₹${tomatoPrice.toFixed(2)}/kg</div></div>
+            <div class="alert alert-info"><span>🧅</span><div><strong>Onion:</strong> ₹${onionPrice.toFixed(2)}/kg</div></div>
+            <div class="alert alert-info"><span>🌾</span><div><strong>Paddy (MSP):</strong> ₹2,183/quintal</div></div>`;
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        updateDashboard();
+        setInterval(updateDashboard, 5000);
+    });
+</script>
+
+{% endblock %}

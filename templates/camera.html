@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="camera" class="tab-content active mt-5">
+    <div class="grid grid-2">
+     
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <div class="card-icon">📹</div>
+                    <span data-lang-key="titleCameraFeed">ESP32 Camera Feed</span>
+                </h3>
+            </div>
+
+            <div class="camera-container">
+                <div class="camera-feed" id="cameraFeed">
+                    
+                    <div class="camera-overlay">
+                        <div id="recordingStatus" style="display:none; color: red; font-weight: bold;">● REC</div>
+                    </div>
+
+                    <img id="esp32Stream" 
+                         crossorigin="anonymous"
+                         alt="ESP32 Live Stream" 
+                         width="720" height="480"
+                         style="border-radius: 12px; margin-top: 10px;" />
+                    
+                    <canvas id="recordingCanvas" width="720" height="480" style="display:none;"></canvas>
+                </div>
+
+                
+                <div class="camera-controls" style="margin-top: 1rem;">
+                    <button class="btn btn-primary" onclick="captureImage()">
+                        📸 Capture Photo
+                    </button>
+                    <button class="btn btn-danger" id="startBtn" onclick="startRecording()">
+                        🔴 Start Record
+                    </button>
+                    <button class="btn btn-secondary" id="stopBtn" onclick="stopRecording()" disabled>
+                        ⬛ Stop
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <div class="card-icon">🎛️</div>
+                    <span data-lang-key="titleCameraSettings">Camera Settings</span>
+                </h3>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Image Quality: <span id="qualityValue" class="text-glow">Medium</span></label>
+                <input type="range" class="slider" min="1" max="3" value="2" id="qualitySlider"
+                    oninput="updateQuality(this.value)">
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Brightness: <span id="brightnessValue" class="text-glow">50%</span></label>
+                <input type="range" class="slider" min="0" max="100" value="50" id="brightnessSlider"
+                    oninput="updateBrightness(this.value)">
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Contrast: <span id="contrastValue" class="text-glow">50%</span></label>
+                <input type="range" class="slider" min="0" max="100" value="50" id="contrastSlider"
+                    oninput="updateContrast(this.value)">
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <h4 style="margin-bottom: 1rem;">📷 Recent Captures</h4>
+                <div class="grid grid-3" id="imageGallery">
+                    <div id="emptyGalleryMsg" style="aspect-ratio: 1; background: rgba(127,127,127,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; text-align: center;">
+                        No images yet
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.camera-container {
+    padding: 1rem;
+}
+.camera-controls button {
+    margin-right: 0.5rem;
+}
+#imageGallery img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+}
+</style>
+
+<script>
+// 4. Configuration: Ensure these match your actual ESP32 IP
+// In your original code, you had two different IPs (10.89... and 10.161...). 
+// I have standardized them here. Update ESP32_BASE to the correct one.
+const ESP32_BASE = "http://10.206.55.204"; 
+const STREAM_URL = ESP32_BASE + ":81/stream";
+const CAPTURE_URL = ESP32_BASE + "/capture";
+
+// Set the stream source dynamically
+document.getElementById("esp32Stream").src = STREAM_URL;
+
+// Recording Variables
+let mediaRecorder;
+let recordedChunks = [];
+let drawingInterval;
+
+async function captureImage() {
+  try {
+    // Hide "No images yet" message
+    const emptyMsg = document.getElementById("emptyGalleryMsg");
+    if(emptyMsg) emptyMsg.style.display = 'none';
+
+    // Fetch relies on the ESP32 acting as a server
+    // Note: This requires the ESP32 to have CORS enabled usually
+    // Fallback: capture from the current img tag using canvas if fetch fails
+    const imgElement = document.getElementById("esp32Stream");
+    
+    const canvas = document.createElement("canvas");
+    canvas.width = imgElement.naturalWidth || 720;
+    canvas.height = imgElement.naturalHeight || 480;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+    
+    const imgURL = canvas.toDataURL("image/jpeg");
+
+    const gallery = document.getElementById("imageGallery");
+    const img = document.createElement("img");
+    img.src = imgURL;
+    gallery.prepend(img);
+    
+  } catch (error) {
+    console.error("Capture failed:", error);
+    alert("Failed to capture image.");
+  }
+}
+
+// 5. NEW: Recording Logic
+function startRecording() {
+    const streamImg = document.getElementById("esp32Stream");
+    const canvas = document.getElementById("recordingCanvas");
+    const ctx = canvas.getContext("2d");
+    
+    // Ensure canvas size matches stream size
+    canvas.width = streamImg.naturalWidth || 720;
+    canvas.height = streamImg.naturalHeight || 480;
+
+    // A. Draw the image to canvas repeatedly (simulates video)
+    // 30 FPS = 1000ms / 30 ≈ 33ms
+    drawingInterval = setInterval(() => {
+        try {
+            ctx.drawImage(streamImg, 0, 0, canvas.width, canvas.height);
+        } catch (e) {
+            // Security error usually happens here if CORS is not set
+            console.error("CORS Error: Cannot draw image to canvas");
+            stopRecording();
+            alert("Security Error: Browser blocked recording due to CORS.");
+        }
+    }, 33);
+
+    // B. Capture the canvas stream
+    const stream = canvas.captureStream(30); // 30 FPS
+    
+    // C. Initialize Recorder
+    recordedChunks = [];
+    try {
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+    } catch (e) {
+        // Fallback for Safari/Other browsers
+        mediaRecorder = new MediaRecorder(stream);
+    }
+
+    mediaRecorder.ondataavailable = function (e) {
+        if (e.data.size > 0) {
+            recordedChunks.push(e.data);
+        }
+    };
+
+    mediaRecorder.onstop = saveRecording;
+
+    // D. Start
+    mediaRecorder.start();
+    
+    // UI Updates
+    document.getElementById("recordingStatus").style.display = "block";
+    document.getElementById("startBtn").disabled = true;
+    document.getElementById("stopBtn").disabled = false;
+}
+
+function stopRecording() {
+    clearInterval(drawingInterval);
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+    }
+    
+    // UI Updates
+    document.getElementById("recordingStatus").style.display = "none";
+    document.getElementById("startBtn").disabled = false;
+    document.getElementById("stopBtn").disabled = true;
+}
+
+function saveRecording() {
+  const blob = new Blob(recordedChunks, { type: "video/webm" });
+  if (blob.size === 0) return; // Don't save empty files
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `esp32_recording_${Date.now()}.webm`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+  }, 100);
+}
+
+// Settings helpers (unchanged)
+function updateQuality(val) {
+  document.getElementById("qualityValue").textContent = val === "1" ? "Low" : val === "2" ? "Medium" : "High";
+}
+function updateBrightness(val) {
+  document.getElementById("brightnessValue").textContent = val + "%";
+}
+function updateContrast(val) {
+  document.getElementById("contrastValue").textContent = val + "%";
+}
+</script>
+{% endblock %}
+

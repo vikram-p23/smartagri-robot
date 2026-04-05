@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="inventory" class="tab-content active mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <div class="card-icon">📦</div>
+                <span data-lang-key="titleInventory">Resource Inventory</span>
+            </h3>
+        </div>
+        <div class="grid grid-3">
+            <div class="card">
+                <h3 class="card-title" data-lang-key="inventorySeeds">🌱 Seeds</h3>
+                <div class="control-label">Paddy Seeds</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="inventorySeedBar" style="width: 75%"></div>
+                </div>
+                <small id="inventorySeedStatus">75% (15.2 kg remaining)</small>
+
+                <div class="control-label" style="margin-top: 1rem;">Millet Seeds</div>
+                <div class="progress-container">
+                    <div class="progress-bar is-low" style="width: 22%"></div>
+                </div>
+                <small>22% (4.4 kg remaining) - Refill soon</small>
+            </div>
+            <div class="card">
+                <h3 class="card-title" data-lang-key="inventoryFertilizer">🌿 Fertilizer</h3>
+                <div class="control-label">Nitrogen-Rich</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="inventoryFertilizerBar" style="width: 60%"></div>
+                </div>
+                <small id="inventoryFertilizerStatus">60% (12.0 kg remaining)</small>
+
+                <div class="control-label" style="margin-top: 1rem;">Organic Compost</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 85%"></div>
+                </div>
+                <small>85% (17.0 kg remaining)</small>
+            </div>
+            <div class="card">
+                <h3 class="card-title" data-lang-key="inventoryFuel">⛽ Fuel & Power</h3>
+                <div class="control-label">Diesel Fuel</div>
+                <div class="progress-container">
+                    <div class="progress-bar is-critical" style="width: 15%"></div>
+                </div>
+                <small>15% (3.0 L remaining) - CRITICAL</small>
+
+                <div class="control-label" style="margin-top: 1rem;">Battery Charge</div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="inventoryBatteryBar" style="width: 87%"></div>
+                </div>
+                <small id="inventoryBatteryStatus">87% - Good</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

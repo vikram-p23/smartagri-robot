@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="maintenance" class="tab-content active mt-5">
+    <div class="grid grid-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <div class="card-icon">📅</div>
+                    <span data-lang-key="titleUpcomingService">Upcoming Service</span>
+                </h3>
+            </div>
+            <div class="alert alert-warning">
+                <span>🔧</span>
+                <div>
+                    <strong data-lang-key="serviceOilChange">Engine Oil & Filter Change</strong><br>
+                    <small data-lang-key="serviceOilChangeDue">Due in <strong>48 operational hours</strong>. Schedule
+                        service soon.</small>
+                </div>
+            </div>
+            <div class="alert alert-info">
+                <span>⚙️</span>
+                <div>
+                    <strong data-lang-key="serviceCalibration">Sensor Calibration</strong><br>
+                    <small data-lang-key="serviceCalibrationDue">Recommended in <strong>120 operational
+                            hours</strong>.</small>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <div class="card-icon">⚙️</div>
+                    <span data-lang-key="titleComponentHealth">Component Health</span>
+                </h3>
+            </div>
+            <div>
+                <div class="control-label" data-lang-key="healthEngine">Engine & Drivetrain</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 92%"></div>
+                </div>
+                <small>92% - Optimal</small>
+            </div>
+            <div>
+                <div class="control-label" data-lang-key="healthSensors">Sensor Array</div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 85%"></div>
+                </div>
+                <small>85% - Good (Calibration due soon)</small>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <div class="card-icon">📜</div>
+                <span data-lang-key="titleMaintenanceHistory">Maintenance History</span>
+            </h3>
+        </div>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th data-lang-key="tableDate">Date</th>
+                    <th data-lang-key="tableService">Service Type</th>
+                    <th data-lang-key="tableTechnician">Technician</th>
+                    <th data-lang-key="tableNotes">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2025-07-15</td>
+                    <td>Quarterly Service</td>
+                    <td>John Doe</td>
+                    <td>Replaced air filter, checked fluid levels.</td>
+                </tr>
+                <tr>
+                    <td>2025-06-28</td>
+                    <td>Software Update</td>
+                    <td>Jane Smith</td>
+                    <td>Upgraded firmware to v2.3.1 for improved mapping.</td>
+                </tr>
+                <tr>
+                    <td>2025-04-12</td>
+                    <td>Initial Setup</td>
+                    <td>John Doe</td>
+                    <td>Full system calibration and testing.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

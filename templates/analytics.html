@@ -1,0 +1,839 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+       
+
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .date-filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f5f5f5;
+        }
+
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .sensor-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+
+        .sensor-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .sensor-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .sensor-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-success {
+            color: var(--success-color);
+        }
+
+        .text-warning {
+            color: var(--warning-color);
+        }
+
+        .text-danger {
+            color: var(--danger-color);
+        }
+
+        .text-muted {
+            color: var(--text-light);
+        }
+
+        .mt-2 {
+            margin-top: 10px;
+        }
+
+        .mt-4 {
+            margin-top: 20px;
+        }
+
+        .mb-3 {
+            margin-bottom: 15px;
+        }
+
+        .d-block {
+            display: block;
+        }
+
+        .fs-4 {
+            font-size: 1.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .comparison-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .badge-up {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .badge-down {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+
+        .badge-neutral {
+            background-color: rgba(158, 158, 158, 0.2);
+            color: var(--text-light);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-content {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.7;
+           pointer-events: auto;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification-error {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .date-filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-chart-line card-icon"></i>
+                        Analytics Dashboard
+                    </h2>
+                </div>
+
+                <div class="date-filter-group">
+                    <div class="form-group">
+                        <label for="start-date" class="form-label">Start Date</label>
+                        <input type="date" id="start-date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="end-date" class="form-label">End Date</label>
+                        <input type="date" id="end-date" class="form-input">
+                    </div>
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="compare-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Compare Period</span>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-primary" onclick="filterAnalyticsData()">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetFilters()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                        <button class="btn btn-outline" onclick="saveSettings()">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </div>
+                </div>
+
+                <div id="compare-period-inputs" class="date-filter-group hidden">
+                    <div class="form-group">
+                        <label for="compare-start-date" class="form-label">Comparison Start Date</label>
+                        <input type="date" id="compare-start-date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="compare-end-date" class="form-label">Comparison End Date</label>
+                        <input type="date" id="compare-end-date" class="form-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-rupee-sign card-icon"></i>
+                            Cost & Profitability Analysis
+                        </h3>
+                    </div>
+
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="cost-seeds" class="form-label">Seed Cost (₹/kg)</label>
+                            <input type="number" id="cost-seeds" class="form-input" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="cost-fertilizer" class="form-label">Fertilizer Cost (₹/kg)</label>
+                            <input type="number" id="cost-fertilizer" class="form-input" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="cost-fuel" class="form-label">Fuel Cost (₹/L)</label>
+                            <input type="number" id="cost-fuel" class="form-input" min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="cost-labor" class="form-label">Labor Cost (₹/day)</label>
+                            <input type="number" id="cost-labor" class="form-input" min="0" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-3 text-center"
+                        style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                        <div>
+                            <div class="sensor-value fs-4" id="profit-total-cost">₹0</div>
+                            <div class="sensor-label">Total Cost</div>
+                        </div>
+                        <div>
+                            <div class="sensor-value fs-4" id="profit-revenue">₹0</div>
+                            <div class="sensor-label">Projected Revenue</div>
+                        </div>
+                        <div>
+                            <div class="sensor-value fs-4 text-success" id="profit-net">₹0</div>
+                            <div class="sensor-label">Net Profit</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-seedling card-icon"></i>
+                            AI Yield Forecast
+                        </h3>
+                    </div>
+                    <div class="sensor-card">
+                        <i class="fas fa-chart-bar sensor-icon"></i>
+                        <span class="sensor-value" id="yieldForecast">5.2 T/ac</span>
+                        <span class="sensor-label">Projected Yield (Paddy)</span>
+                    </div>
+                    <div class="text-center mt-2">
+                        <small class="text-muted">
+                            Confidence: 92% based on current soil and weather data.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-2 mt-4">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-bar card-icon"></i>
+                            Monthly Operations Overview
+                        </h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="analyticsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-tint card-icon"></i>
+                            Water Usage vs. Rainfall
+                        </h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="waterWeatherChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+       
+
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle notification-icon text-success"></i>
+        <span id="notification-message">Settings saved successfully!</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const compareToggle = document.getElementById("compare-toggle");
+        const compareInputs = document.getElementById("compare-period-inputs");
+        const costInputs = ["cost-seeds", "cost-fertilizer", "cost-fuel", "cost-labor"];
+        const notification = document.getElementById("notification");
+
+        // Chart instances
+        let analyticsChart, waterWeatherChart, comparisonChart;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set default dates
+            setDefaultDates();
+
+            // Load saved settings
+            loadSettings();
+
+            // Initialize charts
+            renderCharts();
+
+            // Set up event listeners
+            compareToggle.addEventListener("change", toggleComparison);
+            costInputs.forEach(id => {
+                document.getElementById(id).addEventListener("input", calculateFinancials);
+            });
+
+            // Calculate initial financials
+            calculateFinancials();
+        });
+
+        // Set default date ranges
+        function setDefaultDates() {
+            const today = new Date();
+            const startDate = new Date();
+            startDate.setMonth(today.getMonth() - 6);
+
+            document.getElementById('start-date').valueAsDate = startDate;
+            document.getElementById('end-date').valueAsDate = today;
+
+            const compareStartDate = new Date(startDate);
+            compareStartDate.setFullYear(compareStartDate.getFullYear() - 1);
+            const compareEndDate = new Date(today);
+            compareEndDate.setFullYear(compareEndDate.getFullYear() - 1);
+
+            document.getElementById('compare-start-date').valueAsDate = compareStartDate;
+            document.getElementById('compare-end-date').valueAsDate = compareEndDate;
+        }
+
+        // Toggle comparison inputs
+        function toggleComparison() {
+            if (compareToggle.checked) {
+                compareInputs.classList.remove('hidden');
+            } else {
+                compareInputs.classList.add('hidden');
+            }
+        }
+
+        // Calculate financial metrics
+        function calculateFinancials() {
+            const seedCost = parseFloat(document.getElementById("cost-seeds").value || 0);
+            const fertCost = parseFloat(document.getElementById("cost-fertilizer").value || 0);
+            const fuelCost = parseFloat(document.getElementById("cost-fuel").value || 0);
+            const laborCost = parseFloat(document.getElementById("cost-labor").value || 0);
+
+            // Calculate based on typical usage
+            const totalCost = seedCost * 5 + fertCost * 3 + fuelCost * 20 + laborCost * 10;
+            const revenue = totalCost * 1.5; // Example projection
+            const profit = revenue - totalCost;
+
+            document.getElementById("profit-total-cost").innerText = `₹${totalCost.toLocaleString()}`;
+            document.getElementById("profit-revenue").innerText = `₹${revenue.toLocaleString()}`;
+            document.getElementById("profit-net").innerText = `₹${profit.toLocaleString()}`;
+        }
+
+      
+        function filterAnalyticsData() {
+          
+            document.querySelector('.container').classList.add('loading');
+
+            
+            setTimeout(() => {
+                renderCharts();
+                document.querySelector('.container').classList.remove('loading');
+                showNotification('Filters applied successfully!', 'success');
+            }, 1000);
+        }
+
+       
+        function resetFilters() {
+            setDefaultDates();
+            compareToggle.checked = false;
+            compareInputs.classList.add('hidden');
+
+           
+            document.getElementById("cost-seeds").value = 150;
+            document.getElementById("cost-fertilizer").value = 50;
+            document.getElementById("cost-fuel").value = 95;
+            document.getElementById("cost-labor").value = 600;
+
+            calculateFinancials();
+            renderCharts();
+
+            showNotification('Filters reset to default values.', 'success');
+        }
+
+        // Save settings to localStorage
+        function saveSettings() {
+            const settings = {
+                seedCost: document.getElementById("cost-seeds").value,
+                fertilizerCost: document.getElementById("cost-fertilizer").value,
+                fuelCost: document.getElementById("cost-fuel").value,
+                laborCost: document.getElementById("cost-labor").value,
+                startDate: document.getElementById("start-date").value,
+                endDate: document.getElementById("end-date").value
+            };
+
+            localStorage.setItem('farmAnalyticsSettings', JSON.stringify(settings));
+            showNotification('Settings saved successfully!', 'success');
+        }
+
+       
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('farmAnalyticsSettings');
+
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+
+                document.getElementById("cost-seeds").value = settings.seedCost || 150;
+                document.getElementById("cost-fertilizer").value = settings.fertilizerCost || 50;
+                document.getElementById("cost-fuel").value = settings.fuelCost || 95;
+                document.getElementById("cost-labor").value = settings.laborCost || 600;
+
+                if (settings.startDate) document.getElementById("start-date").value = settings.startDate;
+                if (settings.endDate) document.getElementById("end-date").value = settings.endDate;
+            }
+        }
+
+       
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const messageEl = document.getElementById('notification-message');
+            const icon = notification.querySelector('.notification-icon');
+
+            messageEl.textContent = message;
+            notification.className = 'notification';
+
+            if (type === 'success') {
+                notification.classList.add('notification-success');
+                icon.className = 'fas fa-check-circle notification-icon text-success';
+            } else {
+                notification.classList.add('notification-error');
+                icon.className = 'fas fa-exclamation-circle notification-icon text-danger';
+            }
+
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        
+        function generateData(points = 6, min = 50, max = 200) {
+            return Array.from({ length: points }, () => Math.floor(Math.random() * (max - min + 1)) + min);
+        }
+
+       
+        function renderCharts() {
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+            const yieldData = generateData(6, 4, 8);
+            const costData = generateData(6, 100, 400);
+            const rainfall = generateData(6, 50, 180);
+            const waterUse = generateData(6, 80, 160);
+
+            // Destroy existing charts if they exist
+            if (analyticsChart) analyticsChart.destroy();
+            if (waterWeatherChart) waterWeatherChart.destroy();
+            if (comparisonChart) comparisonChart.destroy();
+
+            // Monthly Operations Chart
+            const ctx1 = document.getElementById("analyticsChart").getContext("2d");
+            analyticsChart = new Chart(ctx1, {
+                type: "bar",
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: "Yield (Tons)",
+                            data: yieldData,
+                            borderWidth: 2,
+                            backgroundColor: "rgba(76, 175, 80, 0.6)",
+                            borderColor: "rgba(76, 175, 80, 1)",
+                        },
+                        {
+                            label: "Cost (₹ in thousands)",
+                            data: costData,
+                            borderWidth: 2,
+                            backgroundColor: "rgba(33, 150, 243, 0.6)",
+                            borderColor: "rgba(33, 150, 243, 1)",
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Water vs Rainfall Chart
+            const ctx2 = document.getElementById("waterWeatherChart").getContext("2d");
+            waterWeatherChart = new Chart(ctx2, {
+                type: "line",
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: "Water Usage (L)",
+                            data: waterUse,
+                            borderColor: "rgba(33, 150, 243, 0.9)",
+                            backgroundColor: "rgba(33,150,243,0.2)",
+                            tension: 0.3,
+                            fill: true,
+                        },
+                        {
+                            label: "Rainfall (mm)",
+                            data: rainfall,
+                            borderColor: "rgba(76, 175, 80, 0.9)",
+                            backgroundColor: "rgba(76,175,80,0.2)",
+                            tension: 0.3,
+                            fill: true,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Comparison Chart (if comparison is enabled)
+            if (compareToggle.checked) {
+                const ctx3 = document.getElementById("comparisonChart").getContext("2d");
+                const currentData = generateData(6, 100, 400);
+                const previousData = generateData(6, 80, 380);
+
+                comparisonChart = new Chart(ctx3, {
+                    type: "bar",
+                    data: {
+                        labels: months,
+                        datasets: [
+                            {
+                                label: "Current Period",
+                                data: currentData,
+                                backgroundColor: "rgba(76, 175, 80, 0.7)",
+                            },
+                            {
+                                label: "Previous Period",
+                                data: previousData,
+                                backgroundColor: "rgba(158, 158, 158, 0.7)",
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: "bottom",
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    drawBorder: false
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div id="farming" class="tab-content active mt-5">
+    <div class="grid grid-2">
+
+       
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">
+                    <div class="card-icon">🌱</div> Precision Seeding
+                </h3>
+                <span class="badge {{ 'bg-success' if task['seeding']==1 else 'bg-secondary' }}" id="seedingStatus">
+                    {{ 'ON ✅' if task['seeding']==1 else 'OFF ❌' }}
+                </span>
+            </div>
+
+            
+            <div class="form-group mt-2 px-3">
+                <label class="form-label">Seed Type</label>
+                <select class="form-input" id="seedType" onchange="animateSeedSelection(this)">
+                    <option value="paddy">🌾 Paddy (Rice)</option>
+                    <option value="millets">🌾 Millets</option>
+                    <option value="sugarcane">🎋 Sugarcane</option>
+                    <option value="cotton">☁️ Cotton</option>
+                    <option value="pulses">🌱 Pulses</option>
+                </select>
+            </div>
+
+            <div class="control-group mt-3 px-3">
+                <label class="control-label">Planting Density:
+                    <span id="densityValue" class="text-glow">50 seeds/m²</span>
+                </label>
+                <input type="range" class="form-range" min="10" max="100" value="50" id="densitySlider"
+                    oninput="updateDensity(this.value)">
+            </div>
+
+            <div class="text-center mt-3 mb-3">
+                <button class="btn {{ 'btn-danger' if task['seeding']==1 else 'btn-secondary' }}" id="seedingBtn"
+                    onclick="toggleTask('seeding')">
+                    {{ '🛑 Stop Seeding' if task['seeding']==1 else '🌱 Start Seeding' }}
+                </button>
+            </div>
+        </div>
+
+     
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">
+                    <div class="card-icon">🚜</div> Precision Ploughing
+                </h3>
+                <span class="badge {{ 'bg-success' if task['ploughing']==1 else 'bg-secondary' }}" id="ploughingStatus">
+                    {{ 'ON ✅' if task['ploughing']==1 else 'OFF ❌' }}
+                </span>
+            </div>
+
+            <div class="form-group mt-2 px-3">
+                <label class="form-label">Soil Type</label>
+                <select class="form-input" id="soilType" onchange="updatePloughDepthBasedOnSoil(this.value)">
+                    <option value="alluvial">Alluvial Soil</option>
+                    <option value="black">Black Cotton Soil</option>
+                    <option value="red">Red Soil</option>
+                </select>
+            </div>
+
+            <div class="control-group mt-3 px-3">
+                <label class="control-label">Plough Depth:
+                    <span id="ploughDepthValue" class="text-glow">15 cm</span>
+                </label>
+                <input type="range" class="form-range" min="5" max="30" value="15" id="ploughDepthSlider"
+                    oninput="updatePloughDepth(this.value)">
+            </div>
+
+            <div class="text-center mt-3 mb-3">
+                <button class="btn {{ 'btn-danger' if task['ploughing']==1 else 'btn-secondary' }}" id="ploughingBtn"
+                    onclick="toggleTask('ploughing')">
+                    {{ '🛑 Stop Ploughing' if task['ploughing']==1 else '🚜 Start Ploughing' }}
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">
+                    <div class="card-icon">🕳️</div> Digging Up/Down
+                </h3>
+                <span class="badge {{ 'bg-success' if task['diggingUpDown']==1 else 'bg-secondary' }}"
+                    id="diggingUpDownStatus">
+                    {{ 'ON ✅' if task['diggingUpDown']==1 else 'OFF ❌' }}
+                </span>
+            </div>
+
+            <div class="form-group mt-2 px-3">
+                <label class="form-label">Speed Level</label>
+                <input type="range" class="form-range" min="1" max="10" value="5" id="digSpeedSlider"
+                    oninput="updateSpeed(this.value)">
+                <span id="speedValue" class="text-glow">5</span>
+            </div>
+
+            <div class="text-center mt-3 mb-3">
+                <button class="btn {{ 'btn-danger' if task['diggingUpDown']==1 else 'btn-secondary' }}"
+                    id="diggingUpDownBtn" onclick="toggleTask('diggingUpDown')">
+                    {{ '🛑 Stop Digging Up/Down' if task['diggingUpDown']==1 else '🕳️ Start Digging Up/Down' }}
+                </button>
+            </div>
+        </div>
+
+    
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title">
+                    <div class="card-icon">⛏️</div> Digging Hole
+                </h3>
+                <span class="badge {{ 'bg-success' if task['diggingHole']==1 else 'bg-secondary' }}"
+                    id="diggingHoleStatus">
+                    {{ 'ON ✅' if task['diggingHole']==1 else 'OFF ❌' }}
+                </span>
+            </div>
+
+            <div class="form-group mt-2 px-3">
+                <label class="form-label">Hole Depth</label>
+                <input type="range" class="form-range" min="10" max="100" value="40" id="holeDepthSlider"
+                    oninput="updateHoleDepth(this.value)">
+                <span id="holeDepthValue" class="text-glow">40 cm</span>
+            </div>
+
+            <div class="text-center mt-3 mb-3">
+                <button class="btn {{ 'btn-danger' if task['diggingHole']==1 else 'btn-secondary' }}"
+                    id="diggingHoleBtn" onclick="toggleTask('diggingHole')">
+                    {{ '🛑 Stop Digging Hole' if task['diggingHole']==1 else '⛏️ Start Digging Hole' }}
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed top-0 end-0 p-3" style="z-index:2000;">
+    <div id="liveToast" class="toast align-items-center text-bg-primary border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage">Message here</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showNotification(message, type = "info") {
+        const toast = document.getElementById("liveToast");
+        const msg = document.getElementById("toastMessage");
+        const colors = {
+            success: "text-bg-success",
+            danger: "text-bg-danger",
+            info: "text-bg-info",
+            warning: "text-bg-warning"
+        };
+        toast.className = "toast align-items-center border-0";
+        toast.classList.add(colors[type] || "text-bg-info");
+        msg.textContent = message;
+        new bootstrap.Toast(toast, { delay: 2000 }).show();
+    }
+
+    function toggleTask(action) {
+        fetch("/farming", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ action })
+        })
+            .then(res => res.json())
+            .then(data => {
+                const btn = document.getElementById(`${data.action}Btn`);
+                const badge = document.getElementById(`${data.action}Status`);
+                const isOn = data.value === 1;
+
+                btn.classList.toggle("btn-danger", isOn);
+                btn.classList.toggle("btn-secondary", !isOn);
+                btn.textContent = isOn
+                    ? `🛑 Stop ${capitalize(action)}`
+                    : `▶️ Start ${capitalize(action)}`;
+
+                badge.textContent = isOn ? "ON ✅" : "OFF ❌";
+                badge.classList.toggle("bg-success", isOn);
+                badge.classList.toggle("bg-secondary", !isOn);
+
+                showNotification(`${capitalize(action)} turned ${isOn ? 'ON ✅' : 'OFF ❌'}`, isOn ? 'success' : 'danger');
+            })
+            .catch(err => console.error(err));
+    }
+
+    function updateDensity(v) {
+        document.getElementById("densityValue").textContent = v + " seeds/m²";
+    }
+    function updatePloughDepth(v) {
+        document.getElementById("ploughDepthValue").textContent = v + " cm";
+    }
+    function updateSpeed(v) {
+        document.getElementById("speedValue").textContent = v;
+    }
+    function updateHoleDepth(v) {
+        document.getElementById("holeDepthValue").textContent = v + " cm";
+    }
+    function updatePloughDepthBasedOnSoil(soilType) {
+        const depths = { alluvial: 15, black: 20, red: 12 };
+        const depth = depths[soilType] || 15;
+        document.getElementById("ploughDepthSlider").value = depth;
+        updatePloughDepth(depth);
+        showNotification(`Soil type: ${soilType} → Depth: ${depth} cm`, "info");
+    }
+    function animateSeedSelection(sel) {
+        const card = sel.closest(".card");
+        card.style.transform = "scale(1.05)";
+        setTimeout(() => (card.style.transform = "scale(1)"), 300);
+    }
+    function capitalize(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+</script>
+
+{% endblock %}

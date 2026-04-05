@@ -1,0 +1,111 @@
+crop_name,season,soil_type,watering_frequency,fertilizer,harvest_time,description
+Tomato Variant 1,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 1,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 1,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 1,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 1,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 1,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 1,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 1,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 1,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 1,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 2,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 2,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 2,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 2,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 2,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 2,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 2,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 2,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 2,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 2,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 3,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 3,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 3,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 3,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 3,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 3,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 3,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 3,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 3,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 3,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 4,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 4,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 4,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 4,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 4,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 4,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 4,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 4,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 4,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 4,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 5,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 5,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 5,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 5,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 5,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 5,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 5,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 5,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 5,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 5,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 6,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 6,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 6,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 6,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 6,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 6,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 6,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 6,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 6,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 6,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 7,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 7,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 7,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 7,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 7,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 7,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 7,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 7,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 7,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 7,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 8,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 8,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 8,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 8,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 8,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 8,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 8,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 8,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 8,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 8,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 9,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 9,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 9,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 9,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 9,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 9,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 9,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 9,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 9,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 9,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Tomato Variant 10,Summer,Loamy soil,Every 2 days,Organic compost,90 days,Tomatoes grow well in warm climates with full sunlight and regular watering. Rich loamy soil improves yield.
+Wheat Variant 10,Winter,Clay loam,Every 5 days,Urea and DAP,120 days,Wheat prefers cool weather and well-drained fertile soil. Moderate irrigation gives best yield.
+Rice Variant 10,Monsoon,Clay soil,Daily,Organic manure and NPK,150 days,"Rice thrives in humid, warm conditions and requires standing water throughout most of its growth."
+Maize Variant 10,Summer,Sandy loam,Every 3 days,Nitrogen-based,110 days,Maize grows best in hot weather and well-drained fertile soil with regular irrigation.
+Potato Variant 10,Winter,Well-drained loam,Every 4 days,Compost and urea,100 days,Potatoes prefer cool weather and loose loamy soil with consistent moisture.
+Onion Variant 10,Winter,Light loam,Every 3 days,FYM and superphosphate,120 days,"Onions need full sun, light loamy soil, and consistent watering."
+Garlic Variant 10,Winter,Sandy loam,Every 3 days,Organic compost,150 days,"Garlic grows in cool climates and needs loose, fertile soil for bulb formation."
+Cabbage Variant 10,Winter,Loamy soil,Every 2 days,Compost and NPK,90 days,Cabbage grows best in cool climates and rich soil with ample water.
+Cauliflower Variant 10,Winter,Loamy soil,Every 3 days,Ammonium sulphate,100 days,Cauliflower prefers cool weather and fertile soil with regular watering.
+Spinach Variant 10,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and shade.
+Spinach,All seasons,Sandy loam,Every 2 days,Organic compost,45 days,Spinach grows throughout the year with proper watering and partial shade.
+Paddy,Kharif (June–November),Clay loam,Daily (flood irrigation),Organic manure or NPK fertilizer,120-150 days,Paddy thrives in clayey soils with good water retention and requires standing water for growth.
+Wheat,Rabi (November–April),Loamy or clay loam,Every 3-4 days,Urea and DAP fertilizers,110-130 days,Wheat grows well in cool and dry climates with moderate irrigation.
+Maize,Kharif and Rabi,Well-drained loamy soil,Every 3 days,Nitrogen-rich fertilizer,90-110 days,Maize prefers warm climates and well-drained soil with regular watering.
+Tomato,All seasons,Sandy loam,Every 2 days,Organic compost or NPK (10:10:10),90 days,Tomatoes grow best in warm climates with moderate watering and good sunlight.
+Brinjal (Eggplant),Summer and Rainy,Loamy soil,Every 3 days,Organic manure or urea,100-120 days,Brinjal requires warm conditions and consistent soil moisture for healthy fruiting.
+Groundnut,Kharif (June–October),Sandy loam,Every 3-4 days,Phosphate fertilizer,110-120 days,Groundnut grows well in loose sandy loam soil with moderate rainfall and sunlight.
+Sugarcane,Annual,Clay or loam,Every 7 days,Organic compost + NPK (15:15:15),12-18 months,Sugarcane requires abundant sunlight
+Potato,Rabi (October–February),Sandy loam,Every 3 days,Urea and potash,90-100 days,Potatoes need cool weather
+Cotton,Kharif (June–November),Black soil or loam,Every 5 days,Potash and phosphate fertilizer,150-180 days,Cotton thrives in warm climates and requires well-drained fertile soil with moderate irrigation.
